@@ -72,7 +72,18 @@ function App() {
   const [ageValue, setAgeValue] = useState('')
   const [cityOption, setCityOption] = useState('cityOption')
   const [occupationOption, setOccupationOption] = useState('occupationOption')
-  let counter = 0
+  const [filteredUsers, setFilteredUsers] = useState([])
+
+  const handleFilterNew = () => {
+    const filtered = sampleData.filter(
+      (user) =>
+        user.name.equals(nameValue) &&
+        user.age.equals(ageValue) &&
+        user.city.equals(cityOption) &&
+        user.occupation.equals(occupationOption)
+    )
+    setFilteredUsers(filtered)
+  }
 
   const handleCityDropdownChange = (event) => {
     setCityOption(event.target.value)
@@ -89,50 +100,12 @@ function App() {
     setAgeValue(event.target.value)
   }
 
-  let name,
-    age,
-    city,
-    occupation = ''
-  const handleFilter = () => {
-    for (let i in sampleData) {
-      if (sampleData[i].name === nameValue) {
-        name = sampleData[i].name
-        counter++
-      }
-      if (sampleData[i].age === ageValue) {
-        age = sampleData[i].age
-        counter++
-      }
-      if (sampleData[i].city === cityOption) {
-        city = sampleData[i].city
-        counter++
-      }
-      if (sampleData[i].occupation === occupationOption) {
-        occupation = sampleData[i].occupation
-        counter++
-      }
-    }
-  }
   function clearFilter() {
     setNameValue('')
     setAgeValue('')
     setCityOption('cityOption')
     setOccupationOption('occupationOption')
-    counter = 0
-  }
-
-  function displayData() {
-    let p
-    if (counter === 4) {
-      p = (
-        <p>
-          Data found based on filters: {name}, {age}, {city}, {occupation}
-        </p>
-      )
-    } else {
-      p = <p>Data not found</p>
-    }
-    return p
+    return <p>Clear Filtered</p>
   }
 
   return (
@@ -220,7 +193,8 @@ function App() {
       <>
         <br></br>
       </>
-      {/* Input fields to filter by name and age */}
+
+      {/* text box for name and age to filter */}
       <form>
         <label>
           Name:{' '}
@@ -231,9 +205,12 @@ function App() {
           Age:{' '}
           <input type='number' value={ageValue} onChange={handleAgeChange} />
         </label>
-        <p>{/* Input Value: {nameValue} and {ageValue} */}</p>{' '}
+        <p>
+          Input Value: {nameValue} and {ageValue}
+        </p>{' '}
       </form>
-      {/* Dropdown to filter by City and Occupation */}
+
+      {/* dropdown filter option by City and Occupation */}
       <div>
         <label>
           Filter by City:{'\n'}
@@ -271,29 +248,34 @@ function App() {
             <option value='Atlanta'>Marketing Manager</option>
           </select>
         </label>
-        {/* <p>City: {cityOption}</p> */}
-        {/* <p>Occupation: {occupationOption}</p> */}
+        <></>
+        <p>City: {cityOption}</p>
+        <p>Occupation: {occupationOption}</p>
       </div>
       <>
         <br></br>
       </>
-      {/* Button to filter by given data */}
-      <button onClick={handleFilter}>Filter</button>
-      
-      {/* Button to clear all filters */}
+
+      {/* search */}
+      <button onClick={handleFilterNew}>Filter</button>
+
+      {/* clear button */}
       <button onClick={clearFilter}>Clear Filter</button>
       <>
         <br></br>
       </>
-      {/* Conditional rendering */}
-      {displayData()}
-      {/* if (counter===4)
-      {
-        <p>
-          Data found based on filters: {name}, {age}, {city}, {occupation}
-        </p>
-      }{' '}
-      else {<p>Data not found</p>} */}
+
+      {/* display filtered data */}
+      {filteredUsers.length != 0 &&
+        filteredUsers.map((user) => (
+          <div key={user.name}>
+            <p>ID: {user.id}</p>
+            <p>Name: {user.name}</p>
+            <p>Age: {user.age}</p>
+            <p>City: {user.city}</p>
+            <p>Occupation: {user.occupation}</p>
+          </div>
+        ))}
     </>
   )
 }
